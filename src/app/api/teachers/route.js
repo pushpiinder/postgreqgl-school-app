@@ -1,4 +1,6 @@
 import { NextResponse } from "next/server";
+import { verify } from "@/utils/jwt";
+import { cookies } from "next/headers";
 import { prisma } from "@/db/prisma";
 import { z } from "zod";
 
@@ -11,6 +13,13 @@ const teacherSchema = z.object({
 });
 
 export async function GET() {
+
+    const token = verify(cookies().get({ name: "token" })?.value);
+
+    // if(!token || token.accessLevel !== "admin") {
+    //     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    // }
+
     const teachers = await prisma.teacher.findMany();
     return NextResponse.json(teachers);
 }
@@ -23,7 +32,13 @@ export async function POST(req) {
             data: teacher,
         });
 
-        return NextResponse.json(newTeacher);
+        return NextResponse.json(newTeacher, {
+            status: 200,
+            headers: {
+              "Access-Control-Allow-Origin": "daniakash.com google.com",
+              "Access-Control-Allow-Methods": "GET",
+            },
+        });
     } catch (e) {
 
         console.error(e);

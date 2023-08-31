@@ -16,6 +16,7 @@ export default function Login() {
         password,
       }),
       method: "POST",
+      credentials: "include",
     })
       .then((res) => res.json())
       .then((data) => {
