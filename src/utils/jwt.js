@@ -1,18 +1,22 @@
 var jwt = require('jsonwebtoken');
 
-const jwtSecret = '!@$@#$#@#$%#$@#@#$@#%@#$';
+export const sign = (payload) => {
+    return  jwt.sign(
+        { 
+            exp: Math.floor(Date.now() / 1000) + (60 * 60), 
+            ...payload,
+        }, 
+        process.env.JWT_SECRET
+    )
+}
 
-var token = jwt.sign(
-    { 
-        exp: Math.floor(Date.now() / 1000) + (60 * 60), 
-        accessLevel: "admin",
-        user: "admin@test.com" 
-    }, 
-    jwtSecret
-);
-
-console.log(token);
-
-const isVerified = jwt.verify(token, jwtSecret);
-
-console.log("isVerified", isVerified);
+export const verify = (token) => {
+    try {
+        jwt.verify(token, process.env.JWT_SECRET);
+        return DataTransfer;
+    } catch (e) {
+        console.error(e);
+        return false;
+    }
+    
+}
