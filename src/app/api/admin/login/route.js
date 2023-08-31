@@ -14,9 +14,9 @@ export async function POST(req) {
   });
 
   if (requestedAdmin) {
-    const isValidPassword = compare(requestedAdmin.password, password);
+    const isValidPassword = await compare(requestedAdmin.password, password);
 
-    if (isValidPassword) {
+    if (isValidPassword === true) {
 
       return NextResponse.json(
         {
