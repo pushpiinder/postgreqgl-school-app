@@ -1,22 +1,30 @@
-var jwt = require('jsonwebtoken');
+import * as jose from "jose";
 
-export const sign = (payload) => {
-    return  jwt.sign(
-        { 
-            exp: Math.floor(Date.now() / 1000) + (60 * 60), 
-            ...payload,
-        }, 
-        process.env.JWT_SECRET
-    )
-}
+const secret = new TextEncoder().encode(process.env.JWT_SECRET);
 
-export const verify = (token) => {
-    try {
-        jwt.verify(token, process.env.JWT_SECRET);
-        return DataTransfer;
-    } catch (e) {
-        console.error(e);
-        return false;
-    }
-    
-}
+export const sign = async (payload) => {
+  const alg = "HS256";
+
+  const jwt = await new jose.SignJWT(payload)
+    .setProtectedHeader({ alg })
+    .setIssuedAt()
+    .setIssuer("urn:example:issuer")
+    .setAudience("urn:example:audience")
+    .setExpirationTime("1h")
+    .sign(secret);
+
+  return jwt;
+};
+
+export const verify = async (token) => {
+  try {
+    const data = await jose.jwtVerify(token, secret, {
+      issuer: "urn:example:issuer",
+      audience: "urn:example:audience",
+    });
+    return data;
+  } catch (e) {
+    console.error(e);
+    return false;
+  }
+};

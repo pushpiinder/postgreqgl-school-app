@@ -14,9 +14,9 @@ const teacherSchema = z.object({
 
 export async function GET() {
 
-    const token = verify(cookies().get({ name: "token" })?.value);
+    // const token = await verify(cookies().get({ name: "token" })?.value);
 
-    // if(!token || token.accessLevel !== "admin") {
+    // if(!token || token.payload.accessLevel !== "admin") {
     //     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     // }
 

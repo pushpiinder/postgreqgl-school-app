@@ -20,7 +20,7 @@ export async function POST(req) {
 
     if (isValidPassword === true) {
 
-        const token = sign({
+        const token = await sign({
             accessLevel: "admin",
             email: requestedAdmin.email,
         });
